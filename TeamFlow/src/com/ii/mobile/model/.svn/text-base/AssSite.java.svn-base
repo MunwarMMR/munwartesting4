@@ -1,0 +1,616 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.model;
+
+import com.sbs.mobile.model.Photo;
+import com.sbs.mobile.util.L;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author fair
+ */
+public class AssSite extends Persist {
+
+    private String lat = null;
+    private String lon = null;
+    private double latitude = 0.0f;
+    private double longitude = 0.0f;
+    private String centroid = null;
+    private String route = "-1";
+    private String siteName;
+    private String areaManager;
+    private String dateCompleted;
+    private String serviceDate;
+    private String earliestServiceDate;
+    private String latestServiceDate;
+    private String productCustomerServiceID;
+    private String metroZip;
+    private String serviceName;
+    private String technicianName;
+    private String serviceType;
+    private List<Photo> photoList = new ArrayList<Photo>();
+    private String photos;
+    private String systemID;
+    private String manufacturer;
+    private String model;
+    private String workorderId;
+    private String workOrderStatus;
+    private String callTypeID;
+    private String customerID;
+    private String customerName;
+    private String additionalServices;
+    private String voiceAtmOnSite;
+    private String depositImage;
+    private String highRiskHrs;
+    private String languages;
+    private String camera;
+    private String voiceGuidance;
+    private String businessDayCutoffTime;
+    private String acceptsDeposits;
+    private String available24;
+    private String accessDays;
+    private String accessType;
+    private String apparatusType;
+    private String surcharge;
+    private String siteLastUpdated;
+    private String siteZip;
+    private String siteState;
+    private String siteStreet;
+    private String siteCity;
+    private String city;
+    private String visible = "true";
+    
+    private long cache = 0;
+    private float floatCache = 0;
+    
+    private String starSelection = "false";
+
+    public AssSite() {
+    }
+
+    /**
+     * Return the simple class name, used for the name of the SQL table.
+     *
+     * @return
+     */
+    @Override
+    public String getSimpleName() {
+        return "dbo.ass_Site";
+    }
+
+    /**
+     * Override for specialty queries.
+     *
+     * @return
+     */
+    public String getSelectQuery() {
+
+        String getQuery = new Props().getProperty("db.AssSite.sqlQuery");
+        System.out.println("getQuery: " + getQuery);
+        //String query = "SELECT top 1000 * FROM " + getSimpleName() 
+        //    +";";
+        //String query = "SELECT * FROM " + getSimpleName() + " LIMIT 1;";
+        //System.out.println("assSite.getSelectQuery: " + query);
+        return getQuery;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public String getLon() {
+        return lon;
+    }
+    protected String assetID;
+
+    /**
+     * Get the value of assetID
+     *
+     * @return the value of assetID
+     */
+    public String getAssetID() {
+        return assetID;
+    }
+
+    @Override
+    public String toString() {
+        return "\nAssSite: "
+                + " lat: " + lat + " lon: " + lon
+                + " centroid: " + centroid
+                + " route: " + route
+                + " metroZip: " + metroZip
+                + " siteName: " + siteName
+                + " assetID: " + assetID
+                + " technician: " + technicianName
+                + " AMName: " + areaManager
+                + " callType: " + callTypeID
+                + " dateCompleted: " + dateCompleted
+                + "\n         serviceDate: " + serviceDate
+                + " earliestServiceDate: " + earliestServiceDate
+                + " latestServiceDate: " + latestServiceDate
+                + " productCustomerServiceID: " + productCustomerServiceID
+                + "\n         serviceType: " + serviceType
+                + " serviceName: " + serviceName
+                + " systemID: " + systemID
+                + " manufacturer: " + manufacturer
+                + " model: " + model
+                + " workOrderID: " + workorderId
+                + " status: " + workOrderStatus
+                + "\n         customerID: " + customerID
+                + " customerName: " + customerName
+                + "\n         additionalServices: " + customerID
+                + " depositImage: " + depositImage
+                + " highRiskHrs: " + highRiskHrs
+                + " languages: " + languages
+                + " camera: " + camera
+                + " voiceGuidance: " + voiceGuidance
+                + "\n         businessDayCutoffTime: " + businessDayCutoffTime
+                + " acceptsDeposits: " + acceptsDeposits
+                + " voiceAtmOnSite: " + voiceAtmOnSite
+                + " voiceAtmOnSite: " + voiceAtmOnSite
+                + " available24: " + available24
+                + "\n         accessDays: " + accessDays
+                + " accessType: " + accessType
+                + " apparatusType: " + apparatusType
+                + " surcharge: " + surcharge
+                + " siteLastUpdated: " + siteLastUpdated
+                + "\n         siteZip: " + siteZip
+                + " voiceAtmOnSite: " + voiceAtmOnSite
+                + " siteState: " + siteState
+                + " voiceAtmOnSite: " + voiceAtmOnSite
+                + " siteCity: " + siteCity
+                + " visible: " + visible;
+    }
+
+    private String printphotoList() {
+        String temp = "";
+        int count = 0;
+        for (Photo photo : photoList) {
+            temp += "\n         ";
+            temp += count + ": " + photo.toString();
+            count += 1;
+        }
+        return temp;
+    }
+
+    public String toStringShort() {
+        return "Id:"
+                + " lat: " + lat + " lon: " + lon
+                + " siteName: " + siteName
+                + " callType: " + callTypeID
+                + " route: " + route
+                + " serviceName: " + serviceName;
+
+    }
+
+    public String verifyAssSite() {
+        if (latitude == -1 || longitude == -1) {
+            return "Bad LatLon";
+        }
+        return "good";
+    }
+
+    public boolean isInUSA() {
+        throw new UnsupportedOperationException("isInUSA Not yet implemented");
+    }
+
+    public String getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public String getEarliestServiceDate() {
+        return earliestServiceDate;
+    }
+
+    public String getLatestServiceDate() {
+        return latestServiceDate;
+    }
+
+    public String getMetroZip() {
+        return metroZip;
+    }
+
+    public String getProductCustomerServiceID() {
+        return productCustomerServiceID;
+    }
+
+    public String getServiceDate() {
+        return serviceDate;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    /**
+     * Get the value of callTypeID
+     *
+     * @return the value of callTypeID
+     */
+    public String getCallTypeID() {
+        return callTypeID;
+    }
+
+    public String getAreaManager() {
+        return areaManager;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getRoute() {
+        return route;
+    }
+
+    public void setRoute(String route) {
+        this.route = route;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    /**
+     * Get the value of technicianName
+     *
+     * @return the value of technicianName
+     */
+    public String getTechnicianName() {
+        return technicianName;
+    }
+
+    public void setAreaManager(String areaManager) {
+        this.areaManager = areaManager;
+    }
+
+    public void setAssetID(String assetID) {
+        this.assetID = assetID;
+    }
+
+    public void setCallTypeID(String callTypeID) {
+        this.callTypeID = callTypeID;
+    }
+
+    public void setDateCompleted(String dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
+
+    public void setEarliestServiceDate(String earliestServiceDate) {
+        this.earliestServiceDate = earliestServiceDate;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public void setLon(String lon) {
+        this.lon = lon;
+    }
+
+    public void setMetroZip(String metroZip) {
+        this.metroZip = metroZip;
+    }
+
+    public void setProductCustomerServiceID(String productCustomerServiceID) {
+        this.productCustomerServiceID = productCustomerServiceID;
+    }
+
+    public void setServiceDate(String serviceDate) {
+        this.serviceDate = serviceDate;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public void setTechnicianName(String technicianName) {
+        this.technicianName = technicianName;
+    }
+
+    public void setZip(String zip) {
+        this.metroZip = zip;
+    }
+
+    public void setLatestServiceDate(String latestServiceDate) {
+        this.latestServiceDate = latestServiceDate;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public List<Photo> getPhotoList() {
+        return photoList;
+    }
+
+    public void setPhotos(String photos) {
+        this.photos = photos;
+    }
+
+    public String getPhotos() {
+        return photos;
+    }
+
+    public void setSystemId(String systemID) {
+        this.systemID = systemID;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getSystemID() {
+        return systemID;
+    }
+
+    public void setSystemID(String systemID) {
+        this.systemID = systemID;
+    }
+
+    public String getWorkorderId() {
+        return workorderId;
+    }
+
+    public void setWorkorderId(String workOrderID) {
+        this.workorderId = workOrderID;
+    }
+
+    public String getWorkOrderStatus() {
+        return workOrderStatus;
+    }
+
+    public void setWorkOrderStatus(String workOrderStatus) {
+        this.workOrderStatus = workOrderStatus;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    public String getCustomerId() {
+        return customerID;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setAdditionalServices(String namedElementText) {
+        additionalServices = namedElementText;
+    }
+
+    public void setVoiceAtmOnSite(String namedElementText) {
+        voiceAtmOnSite = namedElementText;
+    }
+
+    public void setDepositImage(String namedElementText) {
+        depositImage = namedElementText;
+    }
+
+    public void setHighRiskHrs(String namedElementText) {
+        highRiskHrs = namedElementText;
+    }
+
+    public void setLanguages(String namedElementText) {
+        languages = namedElementText;
+    }
+
+    public void setCamera(String namedElementText) {
+        camera = namedElementText;
+    }
+
+    public void setVoiceGuidance(String namedElementText) {
+        voiceGuidance = namedElementText;
+    }
+
+    public void setBusinessDayCutoffTime(String namedElementText) {
+        businessDayCutoffTime = namedElementText;
+    }
+
+    public void setAcceptsDeposits(String namedElementText) {
+        acceptsDeposits = namedElementText;
+    }
+
+    public void setAvailable24(String namedElementText) {
+        available24 = namedElementText;
+    }
+
+    public void setAccessDays(String namedElementText) {
+        accessDays = namedElementText;
+    }
+
+    public void setAccessType(String namedElementText) {
+        accessType = namedElementText;
+    }
+
+    public void setApparatusType(String namedElementText) {
+        apparatusType = namedElementText;
+    }
+
+    public void setSurcharge(String namedElementText) {
+        surcharge = namedElementText;
+    }
+
+    public void setSiteLastUpdated(String namedElementText) {
+        siteLastUpdated = namedElementText;
+    }
+
+    public void setSiteZip(String namedElementText) {
+        siteZip = namedElementText;
+    }
+
+    public void setSiteState(String namedElementText) {
+        siteState = namedElementText;
+    }
+
+    public void setSiteStreet(String namedElementText) {
+        siteStreet = namedElementText;
+    }
+
+    public void setSiteCity(String city) {
+        //L.out("city: " + city);
+        siteCity = city;
+    }
+
+    public String getAcceptsDeposits() {
+        return acceptsDeposits;
+    }
+
+    public String getAccessDays() {
+        return accessDays;
+    }
+
+    public String getAccessType() {
+        return accessType;
+    }
+
+    public String getAdditionalServices() {
+        return additionalServices;
+    }
+
+    public String getApparatusType() {
+        return apparatusType;
+    }
+
+    public String getAvailable24() {
+        return available24;
+    }
+
+    public String getBusinessDayCutoffTime() {
+        return businessDayCutoffTime;
+    }
+
+    public String getCamera() {
+        return camera;
+    }
+
+    public String getCentroid() {
+        return centroid;
+    }
+
+    public String getDepositImage() {
+        return depositImage;
+    }
+
+    public String getHighRiskHrs() {
+        return highRiskHrs;
+    }
+
+    public String getLanguages() {
+        return languages;
+    }
+
+    public String getSiteStreet() {
+        return siteStreet;
+    }
+
+    public String getSiteCity() {
+        return siteCity;
+    }
+
+    public String getSiteLastUpdated() {
+        return siteLastUpdated;
+    }
+
+    public String getSiteState() {
+        return siteState;
+    }
+
+    public String getSiteZip() {
+        return siteZip;
+    }
+
+    public String getSurcharge() {
+        return surcharge;
+    }
+
+    public String getVoiceAtmOnSite() {
+        return voiceAtmOnSite;
+    }
+
+    public String getVoiceGuidance() {
+        return voiceGuidance;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getVisible() {
+        return visible;
+    }
+
+    public void setVisible(String visible) {
+        this.visible = visible;
+    }
+
+    public long getCache() {
+        return cache;
+    }
+
+    public void setCache(long cache) {
+        this.cache = cache;
+    }
+
+    public float getFloatCache() {
+        return floatCache;
+    }
+
+    public void setFloatCache(float floatCache) {
+        this.floatCache = floatCache;
+    }
+
+    public String getStarSelection() {
+        return starSelection;
+    }
+
+    public void setStarSelection(String starSelection) {
+        this.starSelection = starSelection;
+    }
+   
+}

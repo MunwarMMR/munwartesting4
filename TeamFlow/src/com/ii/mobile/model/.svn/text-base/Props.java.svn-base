@@ -1,0 +1,54 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.model;
+
+import com.sbs.mobile.util.L;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+/**
+ *
+ * @author kfairchild
+ */
+public class Props {
+
+    private static Properties props;
+    private static String fileName = "src\\alpha\\resources\\sales.properties";
+
+    public Props() {
+        if (props == null) {
+            props = new Properties();
+        }
+       
+        try {
+            //inputStream = getResources().openRawResource(R.raw.hello_world)
+             L.out("Props.Props: "+new FileInputStream(""));
+            props.load(new FileInputStream(fileName));
+
+        } catch (IOException e) {
+            System.out.println("Properties file not found: " + fileName+L.p());
+        }
+    }
+
+    public void setProperty(String key, String value) {
+        try {
+            System.out.println("Props.setProperty: "+key+" "+value);
+            props.setProperty(key, value);
+            props.store(new FileOutputStream(fileName), null);
+        } catch (IOException ex) {
+            System.out.println("Props.setProperty error: " + ex + L.p());
+        }
+    }
+
+    public String getProperty(String property) {
+        String value = props.getProperty(property);
+        if (value == null) {
+            System.out.println("Props.getProperty error for: " + value);
+        }
+        return value;
+    }
+}

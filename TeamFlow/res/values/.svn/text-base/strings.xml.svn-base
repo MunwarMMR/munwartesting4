@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="hello">Crothall Healthcare</string> 
+    <string name="app_name">Crothall</string>
+    <string name="im_notif">Instant Message</string>
+    <string name="launch_notif">Crothall Services Connected</string>
+    <string name="alert_notif">Alert</string>
+    <string name="content_title">Crothall Services</string>
+    <string name="content_text">Press to return to app</string>     
+</resources>
+      

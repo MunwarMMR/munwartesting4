@@ -1,0 +1,72 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.application;
+
+import android.app.Activity;
+import com.sbs.mobile.users.User;
+import android.app.Application;
+import android.content.Context;
+import com.sbs.mobile.util.L;
+
+/**
+ *
+ * @author kfairchild
+ */
+public class MyContext extends Application {
+
+    // used by toast
+    public static Activity activity = null;
+//    private static User user = null;
+//    static String PREFERENCE_FILE = "onSite";
+//    static String USERNAME = "username";
+//    static String PASSWORD = "password";
+//    static String PLATFORM = "platform";
+    private static MyContext myContext = null;
+    public static User user;
+
+    public MyContext() {
+        super();
+        myContext = this;
+        L.out("myContext: " + myContext);
+    }
+
+    public static Context getAppContext() {
+        L.out("myContext: " + myContext);
+        return myContext;
+    }
+//    @Override
+//    public void onCreate() {
+//        L.out("myContext: " + myContext);
+//        // myContext = this;
+//        super.onCreate();
+//    }
+//
+//    public static User getUser() {
+//        if (user != null) {
+//            return user;
+//        }
+//        Context context = myContext;
+//        L.out("context: " + context);
+//        SharedPreferences settings = context.getSharedPreferences(PREFERENCE_FILE, 0);
+//        String username = settings.getString(USERNAME, "");
+//        String password = settings.getString(PASSWORD, "");
+//        String platform = settings.getString(PLATFORM, "");
+//        user = new User(username, password, platform);
+//        L.out("**************************** MyContext user: " + user);
+//        return user;
+//    }
+//
+//    public static void setUser(User user) {
+//        MyContext.user = user;
+//        Context context = myContext;
+//        L.out("context: " + context);
+//        SharedPreferences settings = context.getSharedPreferences(PREFERENCE_FILE, 0);
+//        SharedPreferences.Editor editor = settings.edit();
+//        editor.putString(USERNAME, user.getUsername());
+//        editor.putString(PASSWORD, user.getPassword());
+//        editor.putString(PLATFORM, user.getPlatform());
+//        editor.commit();
+//    }
+}

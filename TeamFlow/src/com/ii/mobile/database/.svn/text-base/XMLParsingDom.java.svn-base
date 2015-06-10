@@ -1,0 +1,159 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.database;
+
+import android.util.Base64;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import com.sbs.mobile.users.User;
+import com.sbs.mobile.util.L;
+import com.sbs.mobile.model.Persist;
+
+/**
+ *
+ * @author kfairchild
+ */
+public abstract class XMLParsingDom {
+
+    private final User login;
+
+    public XMLParsingDom() {
+        login = User.getUser();
+        L.out("login: " + login);
+    }
+
+    abstract public List<? extends Persist> build(Document doc);
+
+    public String downloadXMLToString(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            L.out("urlString: " + urlString);
+            //L.out("new url: " + url);
+            String credentials = login.marshall();
+            //L.out("credentials: " + credentials);
+            URLConnection conn = url.openConnection();
+            conn.addRequestProperty("Authorization", "Basic "
+                    + Base64.encodeToString(credentials.getBytes("UTF-8"), Base64.NO_WRAP));
+            InputStream inputStream = (InputStream) conn.getInputStream();
+            return convertStreamToString(inputStream);
+        } catch (Exception e) {
+            L.out("XML Parsing Exception = " + e + L.p());
+        }
+        return null;
+    }
+
+    public Document createDocument(String xmlString) throws Exception {
+        DocumentBuilderFactory docBuilderFactory =
+                DocumentBuilderFactory.newInstance();
+
+        docBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+        // Parse the XML file and build the Document object in RAM
+        Document doc = docBuilder.parse(new InputSource(new StringReader(xmlString)));
+        doc.getDocumentElement().normalize();
+        return doc;
+    }
+
+    public String convertStreamToString(InputStream is)
+            throws IOException {
+        if (is != null) {
+            Writer writer = new StringWriter();
+            char[] buffer = new char[1024];
+            try {
+                Reader reader = new BufferedReader(
+                        new InputStreamReader(is, "UTF-8"));
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } finally {
+                is.close();
+            }
+            return writer.toString();
+        } else {
+            return "";
+        }
+    }
+
+    public String getNamedElementText(NodeList nodeList, String text) {
+        Node node = getNamedElement(nodeList, text);
+        if (node == null) {
+            return null;
+        }
+        return node.getTextContent();
+    }
+
+    public Node getNamedElement(NodeList nodeList, String text) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (text.equals(node.getNodeName())) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public String getNamedElementAttribute(NodeList nodeList, String nodeName, String text) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (nodeName.equals(node.getNodeName())) {
+                return getAttributeText(node, text);
+            }
+        }
+        return null;
+    }
+
+    public Node getNamedAttribute(Node child, String name) {
+
+        //Out.out("getnamed: " + document.getFirstChild() + " " + child + " " + child.getNodeName());
+        //NodeList nodes = document.getFirstChild().getChildNodes();
+        //for (int i = 0; i < nodes.getLength(); i++) {
+        //Out.out("nodeList.item(" + i + ")" + nodes.item(i));
+        //}
+        if (child == null) {
+            return null;
+        }
+        NamedNodeMap nodeMap = child.getAttributes();
+
+        //Out.out("Nodemap: " + nodeMap);
+        if (nodeMap != null) {
+            for (int j = 0; j < nodeMap.getLength(); j++) {
+                Node node = nodeMap.item(j);
+                //Out.out("getNamedAttribute node: " + node);
+                if (name.equalsIgnoreCase(node.getNodeName())) {
+                    return node;
+                }
+            }
+        }
+        //Out.out("getNamedAttribute not found: " + name+L.p());
+        return null;
+    }
+
+    public String getAttributeText(Node parent, String name) {
+        Node node = getNamedAttribute(parent, name);
+        if (node != null) {
+            return node.getNodeValue();
+        }
+        System.out.println("getAttributeText failed: " + name + " " + node);
+        return null;
+    }
+}

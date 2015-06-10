@@ -1,0 +1,77 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.util;
+
+import android.graphics.Color;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author kfairchild
+ */
+public class ColorCodes {
+
+    private static List<Code> codes = new ArrayList<Code>();
+    private static boolean inited = false;
+    private static String WARNING = "#FF8C00";
+
+    private synchronized static void init() {
+        if (inited) {
+            return;
+        }
+        codes.add(new Code("Completed", "#00FF00"));
+        codes.add(new Code("Completed, further review", "#FF8000"));
+        codes.add(new Code("Service (On Time)", "#FFFF00"));
+        codes.add(new Code("Service (Scheduled)", "#000000"));
+        codes.add(new Code("Service (Past Due)", "#FF0000"));
+        codes.add(new Code("Service Call", "#800080"));
+        codes.add(new Code("Disapproved", "#FF69B4"));
+        codes.add(new Code("Canceled", "#0000FF"));
+        codes.add(new Code("Approved", "#FFFFFF"));
+        // only important ones - shouldn't get the others
+        codes.add(new Code("Completed", "#00FF00"));
+        codes.add(new Code("Assigned", "#FFFFFF"));
+        codes.add(new Code("Disapproved", "#FF69B4"));
+        inited = true;
+    }
+
+    public static int getColor(String status) {
+        // L.out("status: " + status);
+        init();
+        for (Code code : codes) {
+            if (code.getStatus().equals(status)) {
+                //L.out("code: "+code);
+                return Color.parseColor(code.getColorCode());
+            }
+        }
+        L.out("error status: " + status);
+        return Color.parseColor(WARNING);
+    }
+}
+
+class Code {
+
+    String status;
+    String colorCode;
+
+    Code(String status, String colorCode) {
+        this.status = status;
+        this.colorCode = colorCode;
+    }
+
+    public String getColorCode() {
+        return colorCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public String toString() {
+        return "code status: " + status + " code: " + colorCode;
+    }
+}

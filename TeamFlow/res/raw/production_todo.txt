@@ -1,0 +1,7 @@
+
+
+1) Uncomment crittercism
+2)  x Remove longclick on IMActivity
+3) Update comment in version.json
+4) Update string.xml to point to correct location for production (i.e. team)
+5) Update version number in strings.xml

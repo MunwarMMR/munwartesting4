@@ -1,0 +1,115 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.model;
+
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.sbs.mobile.R;
+import com.sbs.mobile.map.Geo;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author kfairchild
+ */
+public class MetaImage {
+
+    String label = "no label";
+    String photoID = null;
+    //String oldPhotoID = null;
+    Bitmap bitmap = null;
+    //String workOrder = "";
+    Geo geo = null;
+    ImageView imageView = null;
+    TextView textView = null;
+    boolean local = true;
+
+//    MetaPhoto(Bitmap bitmap, String label, double lat, double lon) {
+//        this.bitmap = bitmap;
+//        this.label = label;
+//        geo = new Geo(lat, lon);
+//    }
+
+    MetaImage(String photoID, String label) {
+        this.photoID = photoID;
+        this.label = label;
+        //this.oldPhotoID = oldPhotoID;
+        // L.out(this.toString());
+    }
+
+    public static MetaImage createMetaPhoto(Photo photo) {
+        MetaImage metaPhoto =
+                new MetaImage(photo.getPhotoId(), photo.getLabel());
+        return metaPhoto;
+    }
+
+    public static List<MetaImage> createMetaPhotoList(List<String> newPhotoList, String workOrderID) {
+        List<MetaImage> list = new ArrayList<MetaImage>();
+        for (String flat : newPhotoList) {
+            list.add(createMetaPhoto(Photo.unFlatten(flat)));
+        }
+        return list;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getPhotoID() {
+        return photoID;
+    }
+
+    public int getDefaultImage() {
+       // return R.drawable.sample_1;
+         // return R.drawable.sterling_on_site;
+           return R.drawable.blank;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
+    @Override
+    public String toString() {
+        return "MetaPhoto photoID: " + photoID + " label: " + label
+                + " local: " + local
+                + " "+printBitMap(bitmap);
+    }
+
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public TextView getTextView() {
+        return textView;
+    }
+
+    public void setTextView(TextView textView) {
+        this.textView = textView;
+    }
+
+    public static String printBitMap(Bitmap bm) {
+        if (bm != null) {
+            return "Bitmap: " + bm.getWidth() + " x " + bm.getHeight();
+        }
+        return "No Bitmap";
+    }
+
+    public void setBitmap(Bitmap bmp) {
+        bitmap = bmp;
+    }
+
+}

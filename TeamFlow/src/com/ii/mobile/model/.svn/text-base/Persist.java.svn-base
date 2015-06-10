@@ -1,0 +1,72 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.model;
+
+/**
+ *
+ * @author fair
+ */
+public class Persist {
+
+    private int id = -1;
+    private String status = "active";
+    private String accessTime = "";
+    public String ider;
+    private final boolean debug = false;
+
+
+    public int get_Id() {
+        return id;
+    }
+
+    public void set_Id(int id) {
+        this.id = id;
+    }
+
+    public String getAccessTime() {
+        return accessTime;
+    }
+
+    public void setAccessTime(String accessTime) {
+        this.accessTime = accessTime;
+    }
+
+  
+    /**
+     * Return the status.
+     *
+     * @return
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * Return the simple class name, used for the name of the SQL table.
+     *
+     * @return
+     */
+    public String getSimpleName() {
+        String temp = getClass().getName();
+        int index = temp.lastIndexOf(".");
+        //System.out.println("getSimpleName: " + temp + " " + index);
+        String foo = temp.substring(index + 1, temp.length());
+        foo = foo.toLowerCase();
+        //System.out.println("getSimpleName result: " + foo);
+        return foo;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String toString() {
+        return "Persist (" + id + ")";
+    }
+    
+        public String h(String techName) {
+        return techName.replace(" ", "#");
+    }
+}

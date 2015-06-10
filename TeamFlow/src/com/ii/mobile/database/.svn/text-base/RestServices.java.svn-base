@@ -1,0 +1,311 @@
+package com.sbs.mobile.database;
+
+import android.content.Context;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Base64;
+import com.sbs.mobile.users.User;
+import com.sbs.mobile.util.L;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.StringBody;
+
+public class RestServices {
+
+    //String credentials = "mquist10:M1cha3lQu1st";
+     String credentials = null;
+    //private static final String BLANK_NOTE = "<blank>";
+    private static final String BLANK_NOTE = " ";
+    //private  String hostPath = null;
+
+    public RestServices(Context context) {
+        super();
+         User login = User.getUser();
+        credentials = login.marshall();
+//        L.out("credentials: " + credentials);
+    }
+    
+     public RestServices() {
+        //credentials = "agamble:KAshema01";
+        User login = User.getUser();
+        credentials = login.marshall();
+//        L.out("credentials: " + credentials);
+//        final Resources r = context.getResources();
+//         hostPath = r.getString(R.string.host_path);
+//        L.out("host_path: " + hostPath);
+    }
+
+    public String executePostImage(Uri imageUri, String workOrder, String label) {
+        String url = User.getUser().getPlatform()+"postImage";
+//        L.out("uploading url: " + url);
+//        L.out("workOrder: " + workOrder);
+//        L.out("label: " + label);
+//        L.out("uri: " + imageUri);
+        String responseString = "";
+        try {
+            String imageName = workOrder + "_" + System.currentTimeMillis() + ".jpg";
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            Bitmap bitmap = grabImage(imageUri);
+           
+            if (bitmap == null) {
+                L.out("error bitmap in wrong orientation - returning!");
+                return "0";
+            }
+             //L.out("bitmap: " + bitmap.getWidth() + " x " + bitmap.getHeight());
+            bitmap.compress(CompressFormat.JPEG, 75, bos);
+            byte[] data = bos.toByteArray();
+            ByteArrayBody bab = new ByteArrayBody(data, imageName);
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost(url);
+            MultipartEntity reqEntity = new MultipartEntity(
+                    HttpMultipartMode.BROWSER_COMPATIBLE);
+            // reqEntity.addPart("label", new StringBody(label));
+            reqEntity.addPart("file", bab);
+            reqEntity.addPart("label", new StringBody(label));
+            reqEntity.addPart("workorder", new StringBody(workOrder));
+            postRequest.setEntity(reqEntity);
+            postRequest.addHeader("Authorization", "Basic "
+                    + Base64.encodeToString(credentials.getBytes("UTF-8"), Base64.NO_WRAP));
+            L.out("postImage now "+url+"!");
+            HttpResponse response = httpClient.execute(postRequest);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                    response.getEntity().getContent(), "UTF-8"));
+            String sResponse;
+            StringBuilder s = new StringBuilder();
+
+            while ((sResponse = reader.readLine()) != null) {
+                s = s.append(sResponse);
+            }
+            responseString = s.toString();
+            L.out("PostImage Response: " + responseString);
+            return responseString;
+        } catch (Exception e) {
+            L.out("error:" + e + L.p());
+            return null;
+        }
+    }
+
+    public String executeUpdateImage(String photoID, String label) {
+        String url = User.getUser().getPlatform()+"updateImage";
+//        L.out("photoID: " + photoID);
+//        L.out("label: " + label);
+        String responseString = "";
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost(url);
+            MultipartEntity reqEntity = new MultipartEntity(
+                    HttpMultipartMode.BROWSER_COMPATIBLE);
+            // reqEntity.addPart("label", new StringBody(label));
+            reqEntity.addPart("label", new StringBody(label));
+            reqEntity.addPart("id", new StringBody(photoID));
+            postRequest.setEntity(reqEntity);
+
+            postRequest.addHeader("Authorization", "Basic "
+                    + Base64.encodeToString(credentials.getBytes("UTF-8"), Base64.NO_WRAP));
+            L.out("updateImage now "+url+"!");
+            HttpResponse response = httpClient.execute(postRequest);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                    response.getEntity().getContent(), "UTF-8"));
+            String sResponse;
+            StringBuilder s = new StringBuilder();
+
+            while ((sResponse = reader.readLine()) != null) {
+                s = s.append(sResponse);
+            }
+            responseString = s.toString();
+            L.out("updateImage Response: " + responseString);
+            return responseString;
+        } catch (Exception e) {
+            L.out("error:" + e + L.p());
+            return null;
+        }
+    }
+
+    public String executePostNote(String workOrderId, String text) {
+        //L.out("workOrderId: " + workOrderId + " text: " + text);
+        if (text != null && text.length() == 0) {
+            text = BLANK_NOTE;
+        }
+        String url = User.getUser().getPlatform()+"postNoteToWorkorder";
+        String responseString = "";
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost(url);
+            MultipartEntity reqEntity = new MultipartEntity(
+                    HttpMultipartMode.BROWSER_COMPATIBLE);
+            // reqEntity.addPart("label", new StringBody(label));
+            reqEntity.addPart("note", new StringBody(text));
+            reqEntity.addPart("workorderId", new StringBody(workOrderId));
+            postRequest.setEntity(reqEntity);
+
+            postRequest.addHeader("Authorization", "Basic "
+                    + Base64.encodeToString(credentials.getBytes("UTF-8"), Base64.NO_WRAP));
+            L.out("postNote now "+url+"!");
+            HttpResponse response = httpClient.execute(postRequest);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                    response.getEntity().getContent(), "UTF-8"));
+            String sResponse;
+            StringBuilder s = new StringBuilder();
+
+            while ((sResponse = reader.readLine()) != null) {
+                s = s.append(sResponse);
+            }
+            responseString = s.toString();
+            L.out("postNote Response: " + responseString);
+            return responseString;
+        } catch (Exception e) {
+            L.out("error:" + e + L.p());
+            return null;
+        }
+    }
+
+    public String executeUpdateNote(String workOrderId, String id, String text) {
+//        L.out("workOrderId: " + workOrderId + " id: " + id + " text: " + text);
+        String url = User.getUser().getPlatform()+"updateNote";
+//        L.out("url: " + url);
+//        L.out("credentials: " + credentials);
+        if (text.trim().length() < 1) {
+            text = BLANK_NOTE;
+        }
+        String responseString = "";
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost(url);
+            MultipartEntity reqEntity = new MultipartEntity(
+                    HttpMultipartMode.BROWSER_COMPATIBLE);
+            // reqEntity.addPart("label", new StringBody(label));
+            reqEntity.addPart("id", new StringBody(id));
+            reqEntity.addPart("text", new StringBody(text));
+            postRequest.setEntity(reqEntity);
+
+            postRequest.addHeader("Authorization", "Basic "
+                    + Base64.encodeToString(credentials.getBytes("UTF-8"), Base64.NO_WRAP));
+            L.out("UpdateNote now " + url+" "+text+"!");
+            HttpResponse response = httpClient.execute(postRequest);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                    response.getEntity().getContent(), "UTF-8"));
+            String sResponse;
+            StringBuilder s = new StringBuilder();
+
+            while ((sResponse = reader.readLine()) != null) {
+                s = s.append(sResponse);
+            }
+            responseString = s.toString();
+            L.out("updateNote Response: " + responseString);
+            return responseString;
+        } catch (Exception e) {
+            L.out("error:" + e + L.p());
+            return null;
+        }
+    }
+
+    public String executeVerifyCredentials() {
+        String url = User.getUser().getPlatform()+"verifyCredentials";
+        
+        String responseString = "";
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost(url);
+            MultipartEntity reqEntity = new MultipartEntity(
+                    HttpMultipartMode.BROWSER_COMPATIBLE);
+            // reqEntity.addPart("label", new StringBody(label));
+           
+            postRequest.setEntity(reqEntity);
+
+            postRequest.addHeader("Authorization", "Basic "
+                    + Base64.encodeToString(credentials.getBytes("UTF-8"), Base64.NO_WRAP));
+            HttpResponse response = httpClient.execute(postRequest);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                    response.getEntity().getContent(), "UTF-8"));
+            String sResponse;
+            StringBuilder s = new StringBuilder();
+
+            while ((sResponse = reader.readLine()) != null) {
+                s = s.append(sResponse);
+            }
+            responseString = s.toString();
+            L.out("verifyCredentials Response: " + responseString);
+            return responseString;
+        } catch (Exception e) {
+            L.out("error:" + e + L.p());
+            return null;
+        }
+    }
+
+    public static Bitmap grabImage(Uri mImageUri) {
+        //L.out("grab mImageUri: " + mImageUri);
+        // activity.getContentResolver().notifyChange(mImageUri, null);
+//        ContentResolver cr = activity.getContentResolver();
+//        L.out("cr: " + cr);
+        Bitmap bitmap = null;
+
+        try {
+            File file = new File(mImageUri.getPath());
+            FileInputStream fs = null;
+            try {
+                fs = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                L.out("fileNoteFound: " + mImageUri);
+                return null;
+            }
+            BitmapFactory.Options bfOptions = new BitmapFactory.Options();
+            bfOptions.inDither = false;                     //Disable Dithering mode
+            bfOptions.inPurgeable = true;                   //Tell to gc that whether it needs free memory, the Bitmap can be cleared
+            bfOptions.inInputShareable = true;              //Which kind of reference will be used to recover the Bitmap data after being clear, when it will be used in the future
+            bfOptions.inTempStorage = new byte[32 * 1024];
+            try {
+                if (fs != null) {
+                    bitmap = BitmapFactory.decodeFileDescriptor(fs.getFD(), null, bfOptions);
+                }
+            } catch (IOException e) {
+                L.out("decodeFileDescriptor: " + mImageUri);
+            } finally {
+                if (fs != null) {
+                    try {
+                        fs.close();
+                    } catch (IOException e) {
+                        L.out("unable to close: " + mImageUri);
+                    }
+                }
+            }
+
+            // bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, mImageUri);
+        } catch (Exception e) {
+            //Toast.makeText(activity, "Failed to load", Toast.LENGTH_SHORT).show();
+            L.out("Failed to load" + e);
+            return null;
+        }
+        if (bitmap != null) {
+//            L.out("result: " + bitmap.getWidth() + " " + bitmap.getHeight());
+        }
+        if (bitmap != null && bitmap.getWidth() > bitmap.getHeight()) {
+            return bitmap;
+        } else {
+            //Toast.makeText(activity, "Must take pictures in landscape mode!\nIgnored!", Toast.LENGTH_SHORT).show();
+            //L.out("Must take pictures in landscape mode!");
+            return bitmap;
+        }
+    }
+}

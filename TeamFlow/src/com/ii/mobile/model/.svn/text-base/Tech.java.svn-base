@@ -1,0 +1,71 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.model;
+
+
+import java.sql.Array;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Vector;
+
+
+/**
+ *
+ * @author fair
+ */
+public class Tech extends Persist {
+
+    private String techID = null;
+    private String techName = null;
+    private String metroZip = null;
+    private String routeID = null;
+
+    public Tech() {
+    }
+
+    public String toStringold() {
+        return "techName: " + h(techName) + " techID: " + techID;
+    }
+
+    @Override
+    public String toString() {
+        return techName;
+    }
+
+    public void setTechID(String techID) {
+        this.techID = techID;
+    }
+
+    public void setTechName(String techName) {
+        this.techName = techName;
+    }
+
+    public String getTechName() {
+        return techName;
+    }
+
+    public String getTechID() {
+        return techID;
+    }
+
+    public String getMetroZip() {
+        return metroZip;
+    }
+
+    public void setMetroZip(String metroZip) {
+        this.metroZip = metroZip;
+    }
+
+    public String getRouteID() {
+        return routeID;
+    }
+
+    public void setRouteID(String routeID) {
+        this.routeID = routeID;
+    }
+}

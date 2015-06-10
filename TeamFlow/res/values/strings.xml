@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<<<<<<< HEAD
+    <!-- <string name="default_platform">https://www.submitarequest.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</string> -->
+    <string name="default_platform">https://hrctest.crothall.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</string>
+=======
+    <string name="default_platform">https://www.submitarequest.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</string>
+    <!-- <string name="default_platform">https://hrctest.crothall.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</string> -->
+>>>>>>> 26fe81448f9b13a55150e4f6c6f2ccca714ad58b
+
+    <string-array name="username_array1">
+        <item>kimp</item>
+        <item>ivanp</item>
+        <item>env</item>
+        <item>batenv</item>
+    </string-array>
+    <string-array name="password_array1">
+        <item>234</item>
+        <item>1101</item>
+        <item>990</item>
+        <item>9992</item>
+    </string-array>
+    <string-array name="platform_array1">
+        <item>https://www.submitarequest.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+        <item>https://www.submitarequest.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+        <item>https://www.submitarequest.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+        <item>https://www.submitarequest.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+    </string-array>
+    <string-array name="username_array">
+        <item>mob1</item>
+        <item>ivanp</item>
+        <item>BJAWS</item>
+        <item>mallim</item>
+        <item>mjoe</item>
+    </string-array>
+    <string-array name="password_array">
+        <item>123</item>
+        <item>1101</item>
+        <item>1972</item>
+        <item>999</item>
+        <item>111</item>
+    </string-array>
+    <string-array name="platform_array">
+        <item>https://hrctest.crothall.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+        <item>https://www.submitarequest.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+        <!-- <item>https://crothall-canada.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item> -->
+        <item>https://hrctest.crothall.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+        <item>https://hrctest.crothall.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+        <item>https://hrctest.crothall.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</item>
+    </string-array>
+
+    <string name="spinner_title">Task Classes</string>
+    <string name="hello">Crothall Healthcare</string>
+    <string name="app_name">Crothall Actor</string>
+    <string name="im_notif">Instant Message</string>
+    <string name="launch_notif">Crothall TeamThroughput</string>
+    <string name="alert_notif">Alert</string>
+    <string name="content_title">Crothall Throughput</string>
+    <string name="content_text">Press to return to app</string>
+    <string name="default_user"></string>
+    <string name="default_password"></string>
+    <string name="activity_name">Crothall TeamThroughput</string>
+    <string name="app_url">http://ttmobile.crothall.com/crothall/php/Crothall.html</string>
+    <string name="im_server">ttmobileim.crothall.com</string>
+
+    <integer name="im_port">443</integer>
+
+    <bool name="use_dev_settings">true</bool>
+
+    <string name="app_url_dev">https://198.84.29.22/crothall_mobile/php/Crothall.html</string>
+    <string name="im_server_dev">198.84.29.21</string>
+    <string name="im_server_private_dev">172.17.199.21</string>
+
+    <bool name="reload_each_launch">false</bool>
+    <bool name="show_scrollbars">false</bool>
+    <bool name="show_title">false</bool>
+    <bool name="show_notificationbar">true</bool>
+    <bool name="use_javascript">true</bool>
+    <bool name="debug_javascript">true</bool>
+    <bool name="use_database">true</bool>
+
+    <integer name="database_size">5</integer>
+
+    <bool name="use_appcache">true</bool>
+
+    <integer name="appcache_size">5</integer>
+
+    <bool name="allow_fileaccess">true</bool>
+
+    <string name="intent_app_name">Intent Blocker</string>
+    <string name="intent_block_service_stopped">Intent Blocker Service stopped</string>
+    <string name="intent_block_service_started">Intent Blocker Service started</string>
+    <string name="log_in">Log In</string>
+    <string name="log_out">Log Out</string>
+    <string name="enter">Enter</string>
+<<<<<<< HEAD
+    <string name="long_click_on_login">false</string>
+    <string name="production_download_url">https://hrctest.crothall.com/m/</string>
+    <string name="candidate_download_url">https://hrctest.crothall.com/m/t/</string>
+    <string name="daily_download_url">https://hrctest.crothall.com/m/d/</string>
+    <string name="crothall_comment">Not used Old comment</string>
+    <!-- <string name="app_file">Throughput</string> -->
+
+    <string name="app_file">throughput</string>
+
+    <bool name="isDemoVersion">false</bool>
+    <bool name="isProduction">false</bool>
+    <bool name="isCandidate">false</bool>
+=======
+    <!--  -->
+    <string name="long_click_on_login">false</string>
+    <string name="URLproduction_download_url">http://i-i3-build-vm.cloudapp.net/p/</string>
+    <!-- <string name="production_download_url">http://168.61.65.186/p/</string> -->
+    <!-- <string name="production_download_url">https://hrctest.crothall.com/m/</string> -->
+    <!-- <string name="production_download_url">https://hrctest.crothall.com/m/t/</string> -->
+    <!-- <string name="production_download_url">https://crothall-canada.com/hrc/</string> -->
+    <!-- <string name="beta_download_url">http://i-i3-build-vm.cloudapp.net/t/</string> -->
+    <string name="production_download_url">https://hrctest.crothall.com/m/</string>
+    <string name="beta_download_url">https://hrctest.crothall.com/m/t/</string>
+    <string name="crothall_comment">Not used Old comment</string>
+    <string name="app_file">actor</string>
+
+    <!-- <string name="default_platform">https://hrctest.crothall.com/HRCAjax/DOM/StateEngineWebSite/StateEngineWebService.asmx</string> -->
+
+    <bool name="isDemoVersion">false</bool>
+    <bool name="isProduction">false</bool>
+>>>>>>> 26fe81448f9b13a55150e4f6c6f2ccca714ad58b
+    <bool name="wantCrashReport">true</bool>
+    <bool name="isTestVersion">true</bool>
+    <bool name="wantMAM">false</bool>
+
+    <string name="devId">542a6d6c466eda16ba000005</string>
+    <string name="prodId">54295a1cbb9475602a000004</string>
+    <string name="testId">5486dada466eda126f00000a</string>
+    <string name="crothall_version">4.2</string>
+
+</resources>

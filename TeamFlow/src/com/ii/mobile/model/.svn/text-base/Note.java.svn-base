@@ -1,0 +1,121 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.model;
+
+import android.net.Uri;
+import android.provider.BaseColumns;
+import java.util.GregorianCalendar;
+
+/**
+ *
+ * @author fair
+ */
+public class Note extends Persist {
+
+    public static final String AUTHORITY = "com.sbs.mobile.note.noteprovider";
+    private String id = null;
+    private String name = null;
+    private String labels = null;
+    private String workOrderId = null;
+    private String time = null;
+    private String text = null;
+    private String centralID = null;
+    private String author = null;
+
+    public Note() {
+        time = nowLong() + "";
+    }
+
+    public static Long nowLong() {
+        //GregorianCalendar now = CMSActivator.getAdminService().getDate("");
+        return new GregorianCalendar().getTimeInMillis();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLabels() {
+        return labels;
+    }
+
+    public void setLabels(String labels) {
+        this.labels = labels;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    
+    @Override
+    public String toString() {
+        return "Note: " + id + " workerID: " + workOrderId 
+                + " text: " + text + " time: " + time+" author: "+author+" centralId: "+centralID;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setWorkOrderId(String workOrderId) {
+        this.workOrderId = workOrderId;
+    }
+
+    public String getWorkOrderId() {
+        return workOrderId;
+    }
+
+    public String getCentralID() {
+        return centralID;
+    }
+
+    public void setCentralID(String centralID) {
+        this.centralID = centralID;
+    }
+
+    public static final class NoteColumns implements BaseColumns {
+
+        public static final String ID = "note_id";
+        public static final String TEXT = "note_text";
+        public static final String TIME = "time";
+         public static final String AUTHOR = "author";
+          public static final String MEDIA_ID = "note_id";
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/notes");
+        public static final String DEFAULT_TEXT = "";
+        // needed for updates in local database while uploading to central
+        //public static final String CENTRAL_ID = "central_id";
+        public static final String WORKORDER_ID = "workorder_id";
+        // public static final String CREATE = "create";
+    }
+}

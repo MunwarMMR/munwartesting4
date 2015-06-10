@@ -1,0 +1,119 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.model;
+
+import com.sbs.mobile.util.L;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+/**
+ *
+ * @author kfairchild
+ */
+public final class Photo {
+    String photoId = null;
+    String label = null;
+    String workorderId = null;
+    String imageUri = null;
+    private static final String DELIMITER = "-";
+   
+    public Photo() {
+    }
+
+    public Photo(String photoId, String label) {
+        this.photoId = photoId;
+        this.label = label;
+        
+       // this.oldId = oldID;
+        //L.out(toString());
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String id) {
+        this.photoId = id;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getWorkorderId() {
+        return workorderId;
+    }
+
+    public void setWorkorderId(String workOrderId) {
+        this.workorderId = workOrderId;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+    
+    
+
+//    public String getOldId() {
+//        return oldId;
+//    }
+//
+//    public void setOldId(String oldId) {
+//        this.oldId = oldId;
+//    }
+
+
+    
+    @Override
+       public String toString() {
+           //return "Photo id: "+id+" path: "+path+" name: "+name+" label: "+label;
+           String temp =  "Photo id: "+photoId+" label: "+label+" workorderId: "+workorderId;
+           //if (oldId != null) temp+=" oldId: "+oldId;
+           return temp;
+       }
+
+    public String flatten() {
+        String temp = photoId+DELIMITER+label;
+        //if (oldId != null) temp +=DELIMITER+oldId;
+        return temp;
+    }
+    
+     public static List<Photo> unFlatten(List<String> flatStrings) {
+         List<Photo> photos = new ArrayList<Photo>();
+         for (String flat: flatStrings) {
+             photos.add(unFlatten(flat));
+         }
+         return photos;
+     }
+    
+     public static Photo unFlatten(String flat) {
+         //L.out("unFlatten: "+flat);
+         StringTokenizer st = new StringTokenizer(flat, DELIMITER);
+         String id = "";
+         String label = "";
+         //String oldID = null;
+         if (st.hasMoreTokens()) {
+             id =  st.nextToken();
+         }
+          if (st.hasMoreTokens()) {
+             label =  st.nextToken();
+         }
+           if (st.hasMoreTokens()) {
+             //oldID =  st.nextToken();
+               L.out("error flat: " + flat);
+         }
+           return new Photo(id, label);
+    }
+
+}

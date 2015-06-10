@@ -1,0 +1,80 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.users;
+
+import android.content.ContentProvider;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+
+import com.sbs.mobile.database.cursor.UserCursor;
+import com.sbs.mobile.util.L;
+import java.util.List;
+
+/**
+ *
+ * @author kfairchild
+ */
+public class UserProvider extends ContentProvider {
+
+    private List<User> list = null;
+    String urlString = null;
+    private UserCursor userCursor;
+    private UserDbAdapter userDbAdapter;
+
+    @Override
+    public boolean onCreate() {
+        L.out("onCreate");
+        userDbAdapter = new UserDbAdapter(getContext());
+        return true;
+    }
+
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+            String sortOrder) {
+        if (list == null | true) {
+            list = (List<User>) userDbAdapter.parse();
+            //list = (List<AssSite>) new XMLParsingDOMWorkorder().parse(urlString);
+            L.out("loaded users: " + list + " " + list.size());
+        }
+//        if (list == null) {
+//            list = (List<CustomerLabel>) new XMLParsingDOMLabel().parse(urlString);
+//            L.out("loaded customerLabels: " + list.size());
+//        }
+//        L.out("query " + uri + " projection: " + projection
+//                + " selection:" + selection + " selectionArgs:" + selectionArgs);
+        userCursor = new UserCursor(list);
+        return userCursor;
+
+    }
+
+    @Override
+    public String getType(Uri uri) {
+        L.out("uri: " + uri);
+        return null;
+    }
+
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        L.out("insert: " + values);
+        list = null;
+        userDbAdapter.create(values);
+        return uri;
+    }
+
+    @Override
+    public int delete(Uri arg0, String arg1, String[] arg2) {
+        L.out("delete");
+        throw new UnsupportedOperationException("delete Not supported yet.");
+    }
+
+    @Override
+    public int update(Uri uri, ContentValues values, String string, String[] arg3) {
+        // only updating the name field! 
+        L.out("uri: " + uri + " value: " + string);
+        userCursor.moveToPosition(0);
+        return 0;
+    }
+}

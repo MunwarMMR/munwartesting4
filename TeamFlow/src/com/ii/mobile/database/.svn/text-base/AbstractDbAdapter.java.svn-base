@@ -1,0 +1,306 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.database;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import com.sbs.mobile.staff.Staff.StaffColumns;
+import com.sbs.mobile.util.L;
+import com.sbs.mobile.workorder.WorkorderDbAdapter;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+public abstract class AbstractDbAdapter {
+
+    private String tableName = null;
+    protected static DatabaseHelper mDbHelper;
+    protected static SQLiteDatabase mDb;
+    protected final Context context;
+    protected static int databaseVersion = 2;
+    protected static final String TABLE_NOTES = "notes";
+    protected static final String TABLE_IMAGES = "images";
+    protected static final String TABLE_LABELS = "labels";
+    protected static final String TABLE_STAFF = "staff";
+    protected static final String TABLE_USERS = "users";
+    protected static final String TABLE_XML_WORKORDERS = "xml_workorders";
+    protected static final String TABLE_WORKORDERS = "workorders";
+//    protected static final String[] DATABASE_TABLES = new String[]{
+//        TABLE_NOTES, TABLE_IMAGES, TABLE_LABELS, TABLE_STAFF, 
+//        TABLE_USERS, TABLE_XML_WORKORDERS, TABLE_WORKORDERS
+//    };
+    private static List<String> tableNames = new ArrayList<String>();
+    protected static final String TABLE_CREATE_NOTES =
+            "create table notes (_id integer primary key autoincrement, "
+            + "note_id text , note_text text, time text, author text, "
+            + "central_id text, workorder_id text, time_stamp text);";
+    protected static final String TABLE_CREATE_IMAGES =
+            "create table images (_id integer primary key autoincrement, "
+            + "image_id text not null unique, label text not null, "
+            + "central_id text, image_uri text, workorder_id text, android_uri text,time_stamp text);";
+    protected static final String TABLE_CREATE_WORKORDERS =
+            "create table xml_workorders (_id integer primary key autoincrement, "
+            + "username text not null,  platform text not null, xml_string text not null, time_stamp text);";
+    protected static final String TABLE_CREATE_USERS =
+            "create table users (_id integer primary key autoincrement, "
+            + "username text not null , password text not null, platform text not null, "
+            + "central_id text, time_stamp text);";
+    protected static final String TABLE_CREATE_LABELS =
+            "create table labels (_id integer primary key autoincrement, "
+            + "xml_string text not null, time_stamp text);";
+    protected static final String TABLE_CREATE_STAFF =
+            "create table " + TABLE_STAFF + " (_id integer primary key autoincrement, "
+            + StaffColumns.FIRST_NAME + " text not null,"
+            + StaffColumns.LAST_NAME + " text not null,"
+            + StaffColumns.EMAIL + " text,"
+            + StaffColumns.MOBILE_PHONE + " text,"
+            + StaffColumns.WORK_PHONE + " text,"
+            + StaffColumns.CITY + " text,"
+            + StaffColumns.STATE + " text,"
+            + StaffColumns.AM_NAME + " text,"
+            + "time_stamp text);";
+    public static final String KEY_ROWID = "_id";
+    public static final String TIME_STAMP = "time_stamp";
+    public static final String CENTRAL_ID = "central_id";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    static boolean deleteDataBase = true;
+    private NetworkUploader networkUploader;
+    protected static final String DATABASE_NAME = "data71";
+
+    /**
+     * Constructor - takes the context to allow the database to be
+     * opened/created
+     * 
+     * @param context the Context within which to work
+     */
+    public AbstractDbAdapter(Context context) {
+        // L.out("this: " + this);
+        this.context = context;
+        open();
+        networkUploader = NetworkUploader.register(this, context);
+        // networkUploader = new NetworkUploader(this, context);
+    }
+
+    public long create(ContentValues values) {
+        values.put(TIME_STAMP, new GregorianCalendar().getTimeInMillis() + "");
+        values.put(CENTRAL_ID, (String) null);
+//    	args.put(KEY_SOURCE,source);
+//    	args.put(KEY_DESTINATION,destination);
+        L.out("values: " + values);
+        L.out("mDb: " + mDb + " table: " + getTableName());
+        long result = mDb.insert(getTableName(), null, values);
+        L.out("result: " + result);
+//        showEvents(getTableName());
+        networkUploader = NetworkUploader.getNetworkUploader();
+        if (networkUploader != null) {
+            networkUploader.onResume();
+        }
+        return result;
+    }
+
+    public long update(ContentValues values, String mediaId, String where) {
+        L.out("values: " + values);
+        values.put(TIME_STAMP, new GregorianCalendar().getTimeInMillis() + "");
+        //values.put(WorkOrderColumns.IMAGE_ID, mediaId);
+        L.out("mediaId: " + mediaId);
+        L.out("values: " + values);
+        L.out("where: " + where);
+        mDbHelper.listTables();
+//        showEvents(getTableName());
+//        String temp = NoteColumns.ID + " = " + mediaId;
+//        L.out("temp: " + temp);
+        long updated =
+                mDb.update(getTableName(), values,
+                where + "=" + mediaId, null);
+        L.out("updated: " + updated);
+        // not in table. 
+        if (updated == 0) {
+            // central already knows. should of loaded into table. do when rewrite.
+            values.put(CENTRAL_ID, mediaId);
+            long result = mDb.insert(getTableName(), null, values);
+            L.out("result: " + result);
+        }
+//        showEvents(getTableName());
+        networkUploader = NetworkUploader.getNetworkUploader();
+        if (networkUploader != null) {
+            networkUploader.onResume();
+        }
+        return updated;
+    }
+
+    public boolean delete(long rowId) {
+        L.out("rowId: " + rowId);
+        return mDb.delete(getTableName(), KEY_ROWID + "=" + rowId, null) > 0;
+    }
+
+    public int deleteAll() {
+        return mDb.delete(getTableName(), "1", null);
+    }
+
+    /**
+     * Open or create the database.
+     * 
+     * @return this
+     * @throws SQLException if the database could be neither opened or created
+     */
+    synchronized private void open() throws SQLException {
+//        L.out("mDbHelper: " + mDbHelper);
+//        L.out("mDb: " + mDb);
+        if (mDbHelper == null) {
+            mDbHelper = new DatabaseHelper(this, context);
+            mDb = mDbHelper.getWritableDatabase();
+            mDbHelper.listTables();
+//            showEvents(TABLE_WORKORDERS);
+        }
+    }
+
+    public SQLiteDatabase getWritableDatabase() {
+        return mDb;
+    }
+
+    public void close() {
+        mDbHelper.close();
+    }
+
+    private Cursor getEvents(String tableName) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(tableName, null, null, null, null,
+                null, null);
+        //startManagingCursor(cursor);
+        return cursor;
+    }
+
+    public void showEvents(String tableName) {
+        Cursor c = getEvents(tableName);
+        int count = 1;
+        L.out("Table Name: " + tableName);
+        String tmp = "";
+        for (int i = 1; i < c.getColumnCount(); i++) {
+            tmp += c.getColumnName(i) + " - ";
+        }
+        L.out("table columns: " + tmp);
+        c.moveToFirst();
+        if (c.getCount() == 0) {
+            L.out("No records");
+            return;
+        }
+        do {
+            tmp = c.getColumnName(0) + ": " + c.getInt(0) + " ";
+            for (int i = 1; i < c.getColumnCount(); i++) {
+                tmp += c.getColumnName(i) + ": " + shorten(c.getString(i)) + " ";
+            }
+            L.out(count++ + " : " + tmp);
+        } while (c.moveToNext());
+    }
+    private static int MAX_STRING = 200;
+
+    private String shorten(String string) {
+        if (string == null) {
+            return string;
+        }
+        if (string.length() > MAX_STRING) {
+            return string.substring(0, MAX_STRING);
+        }
+        return string;
+    }
+
+    public void showAllEvents() {
+        for (String table : tableNames) {
+            showEvents(table);
+        }
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+        tableNames.add(tableName);
+    }
+
+    public void updateTimeStamp(Cursor c, String timeStamp, String rowId, String result, ContentValues values) {
+        L.out("timeStamp: " + timeStamp + " rowId: " + rowId + " result: " + result);
+        String currentTimeStamp = c.getString(c.getColumnIndexOrThrow(AbstractDbAdapter.TIME_STAMP));
+        // values.put(NoteColumns.CENTRAL_ID, result);
+        if (timeStamp.equals(currentTimeStamp)) {
+            L.out("timeStamp not changed: " + timeStamp);
+            values.put(AbstractDbAdapter.TIME_STAMP, (String) null);
+        } else {
+            L.out("timeStamp: " + timeStamp + " currentTimeStamp: " + currentTimeStamp);
+        }
+        if (result != null) {
+            L.out("update result: " + result);
+            values.put(CENTRAL_ID, result);
+        }
+        long updated =
+                mDb.update(getTableName(), values,
+                AbstractDbAdapter.KEY_ROWID + "=" + rowId, null);
+//        showEvents(getTableName());
+        L.out("updated the timestamp: " + updated);
+    }
+
+    public boolean uploadIfNeeded() {
+        //L.out("getTableName: " + getTableName());
+        return false;
+    }
+
+    protected static class DatabaseHelper extends SQLiteOpenHelper {
+
+        private final AbstractDbAdapter dbAdapter;
+
+        DatabaseHelper(AbstractDbAdapter dbAdapter, Context context) {
+            super(context, DATABASE_NAME, null, databaseVersion);
+            this.dbAdapter = dbAdapter;
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            L.out("onCreate db: " + db + " name: " + DATABASE_NAME);
+            db.execSQL(TABLE_CREATE_NOTES);
+            db.execSQL(TABLE_CREATE_IMAGES);
+            db.execSQL(TABLE_CREATE_WORKORDERS);
+            db.execSQL(TABLE_CREATE_USERS);
+            db.execSQL(TABLE_CREATE_LABELS);
+            db.execSQL(TABLE_CREATE_STAFF);
+            db.execSQL(WorkorderDbAdapter.getTableCreate());
+
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            L.out("Upgrading database from version " + oldVersion + " to "
+                    + newVersion + ", which will destroy all old data");
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_XML_WORKORDERS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_LABELS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_STAFF);
+            // onCreate(db);
+        }
+
+        public ArrayList<Object> listTables() {
+            ArrayList<Object> tableList = new ArrayList<Object>();
+            String SQL_GET_ALL_TABLES = "SELECT name FROM " + "sqlite_master"
+                    + " WHERE type='table' ORDER BY name";
+            Cursor cursor = mDb.rawQuery(SQL_GET_ALL_TABLES, null);
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                do {
+                    tableList.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            L.out("tableList: " + tableList);
+            return tableList;
+        }
+    }
+}

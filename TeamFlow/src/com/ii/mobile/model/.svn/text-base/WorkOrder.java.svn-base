@@ -1,0 +1,145 @@
+/*
+ * Copyright (C) 2007 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.sbs.mobile.model;
+
+import android.net.Uri;
+import android.provider.BaseColumns;
+
+/**
+ * Convenience definitions for NotePadProvider
+ */
+public final class WorkOrder {
+    // public static final String AUTHORITY = "com.droid.workorder.NotePad";
+
+    public static final String AUTHORITY = "com.sbs.mobile.workorder.WorkOrder";
+
+    // This class cannot be instantiated
+    private WorkOrder() {
+    }
+
+    /**
+     * Notes table
+     */
+    public static final class WorkOrderColumns implements BaseColumns {
+
+        // This class cannot be instantiated
+        private WorkOrderColumns() {
+        }
+        /**
+         * The content:// style URL for this table
+         */
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/notes");
+        /**
+         * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
+         */
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.google.note";
+        /**
+         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single note.
+         */
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.google.note";
+        /**
+         * The default sort order for this table
+         */
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+        /**
+         * The title of the note
+         * <P>Type: TEXT</P>
+         */
+        public static final String TITLE = "title";
+        /**
+         * The note itself
+         * <P>Type: TEXT</P>
+         */
+        public static final String NOTE = "note";
+        /**
+         * The timestamp for when the note was created
+         * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
+         */
+        public static final String CREATED_DATE = "created";
+        /**
+         * The timestamp for when the note was last modified
+         * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
+         */
+        public static final String MODIFIED_DATE = "modified";
+        public static final String LATITUDE = "latitude";
+        public static final String LONGITUDE = "longitude";
+        public static final String ROUTE = "route";
+        public static final String SITENAME = "siteName";
+        public static final String SITESTREET = "street";
+        public static final String SITECITY = "city";
+        public static final String SITESTATE = "state";
+        public static final String SITEZIP = "zip";
+        public static final String AREAMANAGER = "areaManager";
+        public static final String DATECOMPLETED = "dateCompleted";
+        public static final String SERVICEDATE = "serviceDate";
+        public static final String EARLIESTSERVICEDATE = "earliestServiceDate";
+        public static final String LATESTSERVICEDATE = "latestServiceDate";
+        public static final String PRODUCTCUSTOMERSERVICEID = "productCustomerServiceID";
+        public static final String METROZIP = "metroZip";
+        public static final String SERVICENAME = "serviceName";
+        public static final String ASSETID = "assetID";
+        public static final String TECHNICIAN = "technician";
+        public static final String PHOTOS = "photos";
+        public static final String SYSTEMID = "systemID";
+        public static final String MANUFACTORER = "manufacturer";
+        public static final String MODEL = "model";
+        public static final String WORKORDERID = "workOrderId";
+        public static final String CALLTYPEID = "callTypeID";
+        public static final String WORKORDERSTATUS = "workOrderStatus";
+        public static final String CUSTOMERSERVICEID = "customerServiceId";
+        public static final String CUSTOMERNAME = "customerName";
+        public static final String ACCESSDAYS = "accessDays";
+        public static final String AVAILABLE24 = "available24";
+        public static final String ACCEPTSDEPOSITS = "acceptsDeposits";
+        public static final String BUSINESSDAYCUTOFFTIME = "businessDayCutoffTime";
+        public static final String SURCHARGE = "surcharge";
+        public static final String VOICEGUIDANCE = "voiceGuidance";
+        public static final String CAMERA = "camera";
+        public static final String HIGHRISKHRS = "highRiskHrs";
+        public static final String LANGUAGES = "languages";
+        public static final String DEPOSITIMAGE = "depositImage";
+        public static final String VOICEATMONSITE = "voiceAtmOnSite";
+        public static final String ADDITIONALSERVICE = "additionalService";
+        public static final String ACCESSTYPE = "accessType";
+        public static final String CUSTOMERID = "customerId";
+        public static final String APPARATUSTYPE = "apparatusType";
+         public static final String SITELASTUPDATED = "siteLastUpdated";
+        
+        // used by the database
+        public static final String IMAGE_URI = "image_uri";
+        public static final String ANDROID_URI = "android_uri";
+        public static final String LABEL = "label";
+        public static final String TRIES = "tries";
+        public static final String IMAGE_ID = "image_id";
+        // used by producer
+        // public static final String CREATE = "create";
+        public static final String PHOTOLIST = "photos";
+        public static final String POSITION = "position";
+        public static final String ID = "ID";
+        // used by the SQList database
+        public static final String XML_STRING = "xml_string";
+        // used by the Navbar
+        public static final String VISIBLE = "visible";
+        public static final String SORT_ORDER = "sort_order";
+        public static final String SORT_DUE_DATE = "Due Date";
+        public static final String SORT_DISTANCE = "Distance";
+        public static final String SORT_ZIP_CODE = "Zip Code";
+        public static final String SORT_SERVICE_TYPE = "Service Type";
+        public static final String SORT_DEFAULT = SORT_DUE_DATE;
+         public static final String STAR_SELECTION = "star_selection";
+        // status 
+    }
+}

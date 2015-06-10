@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="app_url">http://ttmobile.crothall.com/crothall/php/Crothall.html</string>
+	<string name="im_server">ttmobileim.crothall.com</string>
+	<integer name="im_port">443</integer>
+	
+	<bool name="use_dev_settings">true</bool>	
+	<string name="app_url_dev">https://198.84.29.22/crothall_mobile/php/Crothall.html</string>
+	<string name="im_server_dev">198.84.29.21</string>	
+	<string name="im_server_private_dev">172.17.199.21</string>
+	
+	<bool name="reload_each_launch">false</bool>
+	
+	<bool name="show_scrollbars">false</bool>
+	<bool name="show_title">false</bool>
+	<bool name="show_notificationbar">true</bool>
+
+	<bool name="use_javascript">true</bool>
+	<bool name="debug_javascript">true</bool>
+	
+	<bool name="use_database">true</bool>
+	<integer name="database_size">5</integer>
+	
+	<bool name="use_appcache">true</bool>
+	<integer name="appcache_size">5</integer>
+	
+	<bool name="allow_fileaccess">true</bool>  
+	
+</resources>

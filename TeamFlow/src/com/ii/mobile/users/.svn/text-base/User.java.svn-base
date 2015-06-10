@@ -1,0 +1,200 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.users;
+
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.net.Uri;
+import android.provider.BaseColumns;
+import com.sbs.mobile.application.MyContext;
+import com.sbs.mobile.R;
+import com.sbs.mobile.model.Persist;
+import com.sbs.mobile.util.L;
+
+/**
+ *
+ * @author kfairchild
+ */
+public class User extends Persist {
+
+    public static final String AUTHORITY = "com.sbs.mobile.users.user";
+    private String username = null;
+    private String password = null;
+    private String platform = null;
+    private boolean reload = false;
+    //private static User user = null;
+    // get from strings for easy login
+    private static String[] usernames = null;
+    private static String[] passwords = null;
+    private static String[] platforms = null;
+//    private static Context context = null;
+//    private static User user = null;
+    private static int count = 0;
+    public static String PREFERENCE_FILE = "onSite";
+    public static String USERNAME = "username";
+    public static String PASSWORD = "password";
+    public static String PLATFORM = "platform";
+
+//    public static void registerContext(Context context) {
+//        User.context = context;
+//    }
+    public static User setUser(String username, String password) {
+        return setUser(username, password, null);
+    }
+
+    public static User setUser(String username, String password, String platform) {
+        //L.out("platform: " + platform);
+        String plat = platform;
+        if (platforms == null) {
+            loadPresetUsers();
+        }
+        if (platforms.length > 0 && platform == null) {
+            plat = getPlatform(username);
+            if (plat == null) {
+                plat = platforms[0];
+            }
+        }
+        MyContext.user = new User(username, password, plat, true);
+        //L.out("MyContext.user: " + MyContext.user);
+        return MyContext.user;
+    }
+
+    public static String getPlatform(String username) {
+        //L.out("username: " + username);
+        for (int i = 0; i < usernames.length; i++) {
+            //L.out("usernames: " + usernames[i]);
+            if (username.equals(usernames[i])) {
+                return platforms[i];
+            }
+        }
+        return null;
+    }
+
+    public static User getUser() {
+        if (MyContext.user != null) {
+            return MyContext.user;
+        }
+        return restoreUser();
+    }
+
+    public User(String username, String password, String platform, boolean insert) {
+        this.username = username;
+        this.password = password;
+        this.platform = platform;
+        this.saveUser();
+    }
+
+    public static void loadPresetUsers() {
+        MyContext context = (MyContext) MyContext.getAppContext();
+        L.out("loadPresetUsers: " + context);
+        Resources r = context.getResources();
+        usernames = r.getStringArray(R.array.username_array);
+        passwords = r.getStringArray(R.array.password_array);
+        platforms = r.getStringArray(R.array.platform_array);
+        L.out("usernames: " + usernames.length);
+    }
+
+    public static User next() {
+        if (usernames == null) {
+            loadPresetUsers();
+        }
+//        L.out("count: " + count);
+        count += 1;
+        if (count > usernames.length - 1) {
+            count = 0;
+        }
+        String username = usernames[count];
+        String password = passwords[count];
+        String platform = platforms[count];
+
+        MyContext.user = new User(username, password, platform, true);
+        //L.out("temp: " + MyContext.user);
+//        L.out("count: " + count);
+        return MyContext.user;
+    }
+
+    // not used - still in myContext
+    public User(String username, String password, String platform) {
+        this.username = username;
+        this.password = password;
+        this.platform = platform;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String hostName) {
+        this.platform = hostName;
+    }
+
+    public boolean getReload() {
+        return reload;
+    }
+
+    public void setReload(boolean reload) {
+        this.reload = reload;
+    }
+
+    public String marshall() {
+        return username + ":" + password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String toString() {
+        return marshall() + " platform: " + platform + " reload: " + reload;
+    }
+
+    private void saveUser() {
+        MyContext context = (MyContext) MyContext.getAppContext();
+        //L.out("context: " + context + " " + this);
+        SharedPreferences settings = context.getSharedPreferences(PREFERENCE_FILE, 0);
+        //L.out("settings: " + settings);
+        SharedPreferences.Editor editor = settings.edit();
+        //L.out("getUserName: " + getUsername());
+        editor.putString(USERNAME, getUsername());
+        editor.putString(PASSWORD, getPassword());
+        editor.putString(PLATFORM, getPlatform());
+        editor.commit();
+//        String temp = settings.getString(USERNAME, "yahoo");
+//        L.out("temp: " + temp);
+//        settings = context.getSharedPreferences(PREFERENCE_FILE, 0);
+//        String temp2 = settings.getString(USERNAME, "yahoo");
+//        L.out("temp2: " + temp);
+    }
+
+    private static User restoreUser() {
+        MyContext context = (MyContext) MyContext.getAppContext();
+        //L.out("context: " + context);
+        if (context == null) {
+            L.out("error context: " + context);
+            return null;
+        }
+        SharedPreferences settings = context.getSharedPreferences(PREFERENCE_FILE, 0);
+        String userN = settings.getString(USERNAME, "");
+        String pass = settings.getString(PASSWORD, "");
+        String plat = settings.getString(PLATFORM, "");
+        MyContext.user = new User(userN, pass, plat);
+        L.out("**************************** restoreUser user: " + MyContext.user);
+        return MyContext.user;
+    }
+
+    public static final class UserColumns implements BaseColumns {
+
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/user");
+        public static final String ID = "id";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String PLATFORM = "platform";
+    }
+}

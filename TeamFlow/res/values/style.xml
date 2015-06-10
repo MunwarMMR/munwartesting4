@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <style name="AppTheme">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:tabWidgetStyle">@android:style/Widget.TabWidget</item>
+    </style>
+
+    <style name="SelfTaskTheme" parent="@android:style/Theme"></style>
+
+</resources>

@@ -1,0 +1,104 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sbs.mobile.users;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+
+import android.database.sqlite.SQLiteDatabase;
+import java.util.List;
+
+import com.sbs.mobile.util.L;
+import com.sbs.mobile.database.AbstractDbAdapter;
+import com.sbs.mobile.home.MyToast;
+import com.sbs.mobile.model.WorkOrder.WorkOrderColumns;
+import com.sbs.mobile.users.User.UserColumns;
+import java.util.ArrayList;
+
+/**
+ *
+ * @author kfairchild
+ */
+public class UserDbAdapter extends AbstractDbAdapter {
+
+    /**
+     * Constructor - takes the context to allow the database to be
+     * opened/created
+     * 
+     * @param context the Context within which to work
+     */
+    public UserDbAdapter(Context context) {
+        super(context);
+        setTableName(TABLE_USERS);
+    }
+
+    /**
+     * @return rowId or -1 if failed
+     */
+    @Override
+    public long create(ContentValues values) {
+        L.out("values: " + values);
+        showEvents(getTableName());
+        //long result = mDb.insert(getTableName(), null, values);
+        String where = USERNAME+"='"+values.getAsString(UserColumns.USERNAME)+"' "
+                +"AND "+UserColumns.PLATFORM+"='"+values.getAsString(UserColumns.PLATFORM)+"' ";
+        L.out("where: " + where);
+        long result = mDb.update(getTableName(), values, where, null);
+        if (result != 1) {
+            L.out("create result: " + result);
+             result = mDb.insert(getTableName(), null, values);
+             L.out("insert result: " + result);
+        }
+        L.out("after");
+        showEvents(getTableName());
+        return result;
+    }
+
+    public List<User> parse() {
+        List<User> users = new ArrayList<User>();
+        SQLiteDatabase db = getWritableDatabase();
+        showEvents(getTableName());
+        String where = AbstractDbAdapter.USERNAME + "='" + User.getUser().getUsername() + "'";
+        Cursor c = db.query(getTableName(), null, where, null, null,
+                null, null);
+        L.out("c: " + c.getCount());
+        if (c.getCount() == 0) {
+            //MyToast.show("error: wrong count in user table! " + c.getCount());
+            return users;
+        }
+        c.moveToFirst();
+        String username = c.getString(c.getColumnIndexOrThrow(UserColumns.USERNAME));
+        String password = c.getString(c.getColumnIndexOrThrow(UserColumns.PASSWORD));
+        String platform = c.getString(c.getColumnIndexOrThrow(UserColumns.PLATFORM));
+        User user = new User(username, password, platform, false);
+        L.out("user: " + user);
+        users.add(user);
+        return users;
+    }
+
+    /**
+     * Return a Cursor positioned at the route that matches the given rowId
+     * 
+     * @param rowId id of route to retrieve
+     * @return Cursor positioned to matching route, if found
+     * @throws SQLException if route could not be found/retrieved
+     */
+    public Cursor fetch(long rowId) throws SQLException {
+        Cursor mCursor =
+                mDb.query(true, getTableName(), new String[]{KEY_ROWID,
+                    WorkOrderColumns.XML_STRING}, KEY_ROWID + "=" + rowId, null,
+                null, null, null, null);
+        L.out("mCursor: " + mCursor);
+        if (mCursor != null) {
+            L.out("rows: " + mCursor.getCount());
+        }
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+}
